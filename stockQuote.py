@@ -14,4 +14,5 @@ import yahoo_fin.stock_info as si
 
 targetStock = input("What stock would you like to quote? ")
 
-print(si.get_data(targetStock))
+print(si.get_live_price(targetStock))
+

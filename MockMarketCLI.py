@@ -7,7 +7,6 @@ Dependancies:
   pip install yfinance
   pip install yahoo_fin
 """
-
 import json
 import yahoo_fin.stock_info as si
 
@@ -16,20 +15,40 @@ def mainMenu():
   print("Main Menu")
   print("=========")
   print()
-  print()
-  print("1 - Poftfolio Summary")
-  print("2 -")
+  print("1 - Portfolio Summary")
+  print("2 - Look up Stock Price")
+  print("3 - Buy Shares")
+  print("4 - Sell Shares")
 
 def portfolioSummary():
   with open('portfolio.json') as file:
     portfolio = json.load(file)
-
-  print("Stock Name",'\t',"Bought At",'\t','\t','    ',"Number of Shares")
+  print()
+  print("Portfolio Summary")
+  print()
+  print("Stock Name",'\t',"Bought At",'\t','\t','    ',"Number of Shares",'\t',"Value")
+  totalValue = 0
   for index in range(len(portfolio['stockNames'])):
-    print(portfolio['stockNames'][index] , '\t','\t', portfolio['stockPrices'][index]," ",portfolio['shareQuantities'][index])
+    print(portfolio['stockNames'][index] , '\t','\t', portfolio['stockPrices'][index]," ",portfolio['shareQuantities'][index],'\t','\t','\t','\t',portfolio['stockPrices'][index] * portfolio['shareQuantities'][index])
+
+    totalValue += portfolio['stockPrices'][index] * portfolio['shareQuantities'][index]
+    
+  print()
+  print("Total Portfolio Value:",totalValue)
 
 def main():
-  
+  mainMenu()
+  menuOpt = input()
+
+  if menuOpt == '1':
+    portfolioSummary()
+  if menuOpt == '2':
+    print("2")
+  if menuOpt == '3':
+    print("3")
+  if menuOpt == '4':
+    print("4")
+
   while (True):
     print()
     targetStock = input("What stock would you like to quote? ")

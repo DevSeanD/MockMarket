@@ -16,25 +16,49 @@ def mainMenu():
   print("=========")
   print()
   print("1 - Portfolio Summary")
-  print("2 - Look up Stock Price")
+  print("2 - Look up Stock Prices")
   print("3 - Buy Shares")
   print("4 - Sell Shares")
 
 def portfolioSummary():
   with open('portfolio.json') as file:
     portfolio = json.load(file)
+    
   print()
   print("Portfolio Summary")
   print()
   print("Stock Name",'\t',"Bought At",'\t','\t','    ',"Number of Shares",'\t',"Value")
+
   totalValue = 0
+
   for index in range(len(portfolio['stockNames'])):
     print(portfolio['stockNames'][index] , '\t','\t', portfolio['stockPrices'][index]," ",portfolio['shareQuantities'][index],'\t','\t','\t','\t',portfolio['stockPrices'][index] * portfolio['shareQuantities'][index])
 
     totalValue += portfolio['stockPrices'][index] * portfolio['shareQuantities'][index]
-    
+
   print()
   print("Total Portfolio Value:",totalValue)
+
+def lookUpStockPrices():
+  flag = True
+  
+  print("Look Up Stock Prices")
+  print()
+  while(flag):
+    targetStock = input("What stock would you like to quote? ")
+    
+    try:
+      currPrice = si.get_live_price(targetStock)
+    except:
+      print("a Non Valid Ticker has been entered")
+      main()
+      
+    print("Current price of",targetStock + ":",currPrice)
+    print("")
+    choice = input("Hit enter to continue or 'quit' to exit")
+
+    if choice == "quit" or choice == "QUIT" or choice == "Quit":
+      flag = False
 
 def main():
   mainMenu()
@@ -43,7 +67,7 @@ def main():
   if menuOpt == '1':
     portfolioSummary()
   if menuOpt == '2':
-    print("2")
+    lookUpStockPrices()
   if menuOpt == '3':
     print("3")
   if menuOpt == '4':
@@ -82,3 +106,4 @@ def main():
 
 if __name__ == "__main__":
 	main()
+:

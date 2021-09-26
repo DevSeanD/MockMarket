@@ -38,7 +38,7 @@ def portfolioSummary():
 
   for index in range(len(portfolio['stockNames'])):
     print(portfolio['stockNames'][index] , '\t','\t', portfolio['stockPrices'][index]," ",portfolio['shareQuantities'][index],'\t','\t','\t','\t',portfolio['stockPrices'][index] * portfolio['shareQuantities'][index])
-
+    
     totalValue += portfolio['stockPrices'][index] * portfolio['shareQuantities'][index]
 
   print()
@@ -64,7 +64,47 @@ def lookUpStockPrices():
 
     if choice == "quit" or choice == "QUIT" or choice == "Quit":
       flag = False
-
+      
+def buyShares():
+  flag = True
+  
+  print("Buy Shares")
+  print()
+  while(flag):
+    targetStock = input("What stock would you like to buy shares of?: ")
+    
+    try:
+      currPrice = si.get_live_price(targetStock)
+    except:
+      print("a Non Valid Ticker has been entered")
+      
+    print(targetStock, "$" + str(currPrice))
+    print()
+    print("1 - Buy", targetStock)
+    print("2 - Main Menu")
+    choice = input()
+  
+    if choice == '1':
+      print("How may shares of", targetStock, "would you like to purchase")
+      order = input()
+      
+    if choice == '2':
+      mainMenu()
+    
+    else:
+      while choice != '1' and choice != '2':
+        print("1 - Buy", targetStock)
+        print("2 - Main Menu")
+        choice = input()
+        
+        if choice == '1':
+          print("How may shares of", targetStock, "would you like to purchase")
+          order = input()
+      
+        if choice == '2':
+          mainMenu()
+    
+    
 def main():
   mainMenu()
   menuOpt = input()
@@ -74,7 +114,7 @@ def main():
   if menuOpt == '2':
     lookUpStockPrices()
   if menuOpt == '3':
-    print("3")
+    buyShares()
   if menuOpt == '4':
     print("4")
 

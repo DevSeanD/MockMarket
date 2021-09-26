@@ -44,11 +44,10 @@ def portfolioSummary():
 		    portfolio['stockNames'][index], '\t', '\t',
 		    portfolio['stockPrices'][index], " ",
 		    portfolio['shareQuantities'][index], '\t', '\t', '\t', '\t',
-		    portfolio['stockPrices'][index] *
-		    portfolio['shareQuantities'][index])
+		    float(portfolio['stockPrices'][index]) * float(portfolio['shareQuantities'][index]))
 
-		totalValue += portfolio['stockPrices'][index] * portfolio[
-		    'shareQuantities'][index]
+		totalValue += float(portfolio['stockPrices'][index]) * float(portfolio[
+		    'shareQuantities'][index])
 
 	print()
 	print("Total Portfolio Value:", totalValue)
@@ -66,7 +65,7 @@ def lookUpStockPrices():
 			currPrice = si.get_live_price(targetStock)
 		except:
 			print("a Non Valid Ticker has been entered")
-			main()
+			mainMenu()
 
 		print("Current price of", targetStock + ":", currPrice)
 		print("")
@@ -95,7 +94,7 @@ def buyShares():
 		print("2 - Main Menu")
 		choice = input()
 
-		if choice == '1':
+		if choice == '1' or choice == '2':
 		  validInput = True
 		  
 		  while(validInput):
@@ -117,7 +116,7 @@ def buyShares():
 		    json.dump(portfolio, file, indent=4)
 
 		if choice == '2':
-			mainMenu()
+			main()
 
 		else:
 			while choice != '1' and choice != '2':
@@ -128,7 +127,7 @@ def buyShares():
 				if choice == '1':
 				  buyShares()
 				if choice == '2':
-					mainMenu()
+					main()
 
 
 def main():
@@ -143,38 +142,6 @@ def main():
 		buyShares()
 	if menuOpt == '4':
 		print("4")
-
-	while (True):
-		print()
-		targetStock = input("What stock would you like to quote? ")
-
-		try:
-			currPrice = si.get_live_price(targetStock)
-		except:
-			print("a Non Valid Ticker has been entered")
-			main()
-
-		print("Current price of", targetStock + ":", currPrice)
-		print("")
-
-		print("Would you like to buy shares of", targetStock + "?")
-		buyOrNot = input("If yes enter the number of shares:  ")
-
-		if buyOrNot[0] == 'y' or buyOrNot == 'Y':
-			numOfShares = int(buyOrNot[1:])
-
-			with open('portfolio.json') as file:
-				portfolio = json.load(file)
-
-			portfolio['stockNames'].append(targetStock)
-
-			portfolio['stockPrices'].append(si.get_live_price(targetStock))
-
-			portfolio['shareQuantities'].append(numOfShares)
-
-			with open('portfolio.json', 'w') as file:
-				json.dump(portfolio, file, indent=4)
-
 
 if __name__ == "__main__":
 	main()

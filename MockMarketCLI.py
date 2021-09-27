@@ -7,6 +7,7 @@ Dependancies:
   pip install yahoo_fin
 
 TODO:
+  PortfolioSummary - Calculate new value instead of bought at value
   BuyShares function
   SellShares function
   Round stock price values
@@ -15,6 +16,9 @@ TODO:
 import json
 import yahoo_fin.stock_info as si
 
+def initalUserSetup():
+  # The goal of this function is to prepare the .json file
+  # As well as allocate the user some funds to begin with
 
 def mainMenu():
 	print("=========")
@@ -39,15 +43,18 @@ def portfolioSummary():
 
 	totalValue = 0
 
-	for index in range(len(portfolio['stockNames'])):
+	for index in range(len(portfolio['stockNames'])): # this loop will execute based on the amount of entries in 'stocknames'
+	
+	  # print out Stock name, Value bought at, Stock Quantity, and calculated value
 		print(
 		    portfolio['stockNames'][index], '\t', '\t',
 		    portfolio['stockPrices'][index], " ",
 		    portfolio['shareQuantities'][index], '\t', '\t', '\t', '\t',
-		    float(portfolio['stockPrices'][index]) * float(portfolio['shareQuantities'][index]))
+		    float(portfolio['stockPrices'][index]) *
+		    float(portfolio['shareQuantities'][index]))
 
-		totalValue += float(portfolio['stockPrices'][index]) * float(portfolio[
-		    'shareQuantities'][index])
+		totalValue += float(portfolio['stockPrices'][index]) * float(
+		    portfolio['shareQuantities'][index])
 
 	print()
 	print("Total Portfolio Value:", totalValue)
@@ -95,25 +102,25 @@ def buyShares():
 		choice = input()
 
 		if choice == '1' or choice == '2':
-		  validInput = True
-		  
-		  while(validInput):
-			  print("How may shares of", targetStock,
-			      "would you like to purchase")
-			  order = input()
-			  
-			  validInput = not order.isdigit()
-		  with open('portfolio.json') as file:
-			  portfolio = json.load(file)
+			validInput = True
 
-		  portfolio['stockNames'].append(targetStock)
+			while (validInput):
+				print("How may shares of", targetStock,
+				      "would you like to purchase")
+				order = input()
 
-		  portfolio['stockPrices'].append(currPrice)
+				validInput = not order.isdigit()
+			with open('portfolio.json') as file:
+				portfolio = json.load(file)
 
-		  portfolio['shareQuantities'].append(order)
+			portfolio['stockNames'].append(targetStock)
 
-		  with open('portfolio.json', 'w') as file:
-		    json.dump(portfolio, file, indent=4)
+			portfolio['stockPrices'].append(currPrice)
+
+			portfolio['shareQuantities'].append(order)
+
+			with open('portfolio.json', 'w') as file:
+				json.dump(portfolio, file, indent=4)
 
 		if choice == '2':
 			main()
@@ -125,7 +132,7 @@ def buyShares():
 				choice = input()
 
 				if choice == '1':
-				  buyShares()
+					buyShares()
 				if choice == '2':
 					main()
 
@@ -142,6 +149,7 @@ def main():
 		buyShares()
 	if menuOpt == '4':
 		print("4")
+
 
 if __name__ == "__main__":
 	main()

@@ -39,26 +39,46 @@ def portfolioSummary():
 	print()
 	print("Portfolio Summary")
 	print()
-	print("Stock Name", '\t', "Bought At", '\t', '\t', '    ',
-	      "Number of Shares", '\t', "Value")
+	print("Stock Name", '\t','\t', "Bought At",'\t', '\t',
+	      "Number of Shares",'\t' ,'\t', "Value")
 
 	totalValue = 0
-
+	largeNumTab = False
+  
 	for index in range(len(portfolio['stockNames'])): # this loop will execute based on the amount of entries in 'stocknames'
 	
 	  # print out Stock name, Value bought at, Stock Quantity, and calculated value
-		print(
-		    portfolio['stockNames'][index], '\t', '\t',
-		    portfolio['stockPrices'][index], " ",
-		    portfolio['shareQuantities'][index], '\t', '\t', '\t', '\t',
-		    float(portfolio['stockPrices'][index]) *
-		    float(portfolio['shareQuantities'][index]))
-
-		totalValue += float(portfolio['stockPrices'][index]) * float(
-		    portfolio['shareQuantities'][index])
+	  stockPrice = str(portfolio['stockPrices'][index])
+	  stockPrice = stockPrice.split('.')
+	  stockPriceDisplay = stockPrice[0] + '.' + stockPrice[1][0] + stockPrice[1][1]
+	  
+	  stockValue = str(portfolio['stockPrices'][index] * float(portfolio['shareQuantities'][index]))
+	  stockValue = stockValue.split('.')
+	  stockValueDisplay = stockValue[0] + '.' + stockValue[1][0] + stockValue[1][1]
+	  
+	  if float(stockValueDisplay) > 999.99:
+	    largeNumTab = True
+	    
+	  if(largeNumTab):
+	    print(
+		    portfolio['stockNames'][index], '\t', '\t','\t' ,
+		    stockPriceDisplay, '\t','\t',
+		    portfolio['shareQuantities'][index], '\t', '\t','\t','\t','\t',stockValueDisplay)
+	  else:
+	    print(
+		    portfolio['stockNames'][index], '\t', '\t','\t' ,
+		    stockPriceDisplay, '\t','\t',
+		    portfolio['shareQuantities'][index], '\t', '\t','\t','\t','\t','\t',stockValueDisplay)
+		    
+	  largeNumTab = False
+		
+	  totalValue = str(float(portfolio['shareQuantities'][index]) * portfolio['stockPrices'][index])
+	  
+	totalValue = totalValue.split('.')
+	totalValueDisplay = totalValue[0] + '.' + totalValue[1][0] + totalValue[1][1]
 
 	print()
-	print("Total Portfolio Value:", totalValue)
+	print("Total Portfolio Value:", totalValueDisplay)
 
 
 def lookUpStockPrices():
@@ -98,7 +118,9 @@ def buyShares():
 			currPrice = si.get_live_price(targetStock)
 		except:
 			print("a Non Valid Ticker has been entered")
-
+		currPrice = str(currPrice).split('.')
+		currPriceDisplay = currPrice[0] + '.' + currPrice[1][0] + currPrice[1][1]
+		
 		print(targetStock, "$" + str(currPrice))
 		print()
 		print("1 - Buy", targetStock)

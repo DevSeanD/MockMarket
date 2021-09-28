@@ -2,7 +2,7 @@
 Author: Sean Dever
 Description: The purpose of this file is to serve as a starting point for the overall mock stock market project. It will ask the user for a stock and using the yahoo finance api it will rectrieve the current price.
 File Name: MockMarketCLI.py
-Dependancies:
+Dependencies:
   pip install yfinance
   pip install yahoo_fin
 
@@ -19,6 +19,7 @@ import yahoo_fin.stock_info as si
 def initalUserSetup():
   # The goal of this function is to prepare the .json file
   # As well as allocate the user some funds to begin with
+  pass
 
 def mainMenu():
 	print("=========")
@@ -73,8 +74,11 @@ def lookUpStockPrices():
 		except:
 			print("a Non Valid Ticker has been entered")
 			mainMenu()
-
-		print("Current price of", targetStock + ":", currPrice)
+    
+		currPrice = str(currPrice).split('.')
+		currPriceDisplay = currPrice[0] + '.' + currPrice[1][0] + currPrice[1][1]
+    
+		print("Current price of", targetStock + ":", currPriceDisplay)
 		print("")
 		choice = input("Hit enter to continue or 'quit' to exit")
 

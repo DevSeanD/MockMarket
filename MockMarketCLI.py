@@ -16,10 +16,12 @@ TODO:
 import json
 import yahoo_fin.stock_info as si
 
+
 def initalUserSetup():
-  # The goal of this function is to prepare the .json file
-  # As well as allocate the user some funds to begin with
-  pass
+	# The goal of this function is to prepare the .json file
+	# As well as allocate the user some funds to begin with
+	pass
+
 
 def mainMenu():
 	print("=========")
@@ -39,43 +41,77 @@ def portfolioSummary():
 	print()
 	print("Portfolio Summary")
 	print()
-	print("Stock Name", '\t','\t', "Bought At",'\t', '\t',
-	      "Number of Shares",'\t' ,'\t', "Value")
+	print("Stock Name", '\t', '\t', "Bought At", '\t', '\t',
+	      "Number of Shares", '\t', '\t', "Value")
 
 	totalValue = 0
 	largeNumTab = False
-  
-	for index in range(len(portfolio['stockNames'])): # this loop will execute based on the amount of entries in 'stocknames'
-	
-	  # print out Stock name, Value bought at, Stock Quantity, and calculated value
-	  stockPrice = str(portfolio['stockPrices'][index])
-	  stockPrice = stockPrice.split('.')
-	  stockPriceDisplay = stockPrice[0] + '.' + stockPrice[1][0] + stockPrice[1][1]
-	  
-	  stockValue = str(portfolio['stockPrices'][index] * float(portfolio['shareQuantities'][index]))
-	  stockValue = stockValue.split('.')
-	  stockValueDisplay = stockValue[0] + '.' + stockValue[1][0] + stockValue[1][1]
-	  
-	  if float(stockValueDisplay) > 999.99:
-	    largeNumTab = True
-	    
-	  if(largeNumTab):
-	    print(
-		    portfolio['stockNames'][index], '\t', '\t','\t' ,
-		    stockPriceDisplay, '\t','\t',
-		    portfolio['shareQuantities'][index], '\t', '\t','\t','\t','\t',stockValueDisplay)
-	  else:
-	    print(
-		    portfolio['stockNames'][index], '\t', '\t','\t' ,
-		    stockPriceDisplay, '\t','\t',
-		    portfolio['shareQuantities'][index], '\t', '\t','\t','\t','\t','\t',stockValueDisplay)
-		    
-	  largeNumTab = False
-		
-	  totalValue = str(float(portfolio['shareQuantities'][index]) * portfolio['stockPrices'][index])
-	  
+
+	for index in range(
+	    len(portfolio['stockNames'])
+	):  # this loop will execute based on the amount of entries in 'stocknames'
+
+		# print out Stock name, Value bought at, Stock Quantity, and calculated value
+		stockPrice = str(portfolio['stockPrices'][index])
+		stockPrice = stockPrice.split('.')
+
+		try:
+			stockPriceDisplay = stockPrice[0] + '.' + stockPrice[1][
+			    0] + stockPrice[1][1]
+
+		except:
+			try:
+				stockPriceDisplay = stockPrice[0] + '.' + stockPrice[1][0] + "0"
+
+			except:
+				stockPriceDisplay = stockPrice[0] + '.' + "00"
+
+		stockValue = str(portfolio['stockPrices'][index] *
+		                 float(portfolio['shareQuantities'][index]))
+		stockValue = stockValue.split('.')
+
+		try:
+			stockValueDisplay = stockValue[0] + '.' + stockValue[1][
+			    0] + stockValue[1][1]
+
+		except:
+			try:
+				stockValueDisplay = stockValue[0] + '.' + stockValue[1][0] + "0"
+
+			except:
+				stockValueDisplay = stockValue[0] + '.' + "00"
+
+		if float(stockValueDisplay) > 999.99:
+			largeNumTab = True
+
+		if (largeNumTab):
+			print(portfolio['stockNames'][index], '\t', '\t', '\t',
+			      stockPriceDisplay, '\t', '\t',
+			      portfolio['shareQuantities'][index], '\t', '\t', '\t', '\t',
+			      '\t', stockValueDisplay)
+		else:
+			print(portfolio['stockNames'][index], '\t', '\t', '\t',
+			      stockPriceDisplay, '\t', '\t',
+			      portfolio['shareQuantities'][index], '\t', '\t', '\t', '\t',
+			      '\t', '\t',stockValueDisplay)
+
+		largeNumTab = False
+
+		totalValue = str(
+		    float(portfolio['shareQuantities'][index]) *
+		    portfolio['stockPrices'][index])
+
 	totalValue = totalValue.split('.')
-	totalValueDisplay = totalValue[0] + '.' + totalValue[1][0] + totalValue[1][1]
+	
+	try:
+	  totalValueDisplay = totalValue[0] + '.' + totalValue[1][0] + totalValue[1][
+	    1]
+	except:
+	  try:
+	    totalValueDisplay = totalValue[0] + '.' + totalValue[1][0] + "0"
+	  except:
+	    totalValueDisplay = totalValue[0] + '.' + "00"
+  
 
 	print()
 	print("Total Portfolio Value:", totalValueDisplay)
@@ -94,10 +130,20 @@ def lookUpStockPrices():
 		except:
 			print("a Non Valid Ticker has been entered")
 			mainMenu()
-    
+
 		currPrice = str(currPrice).split('.')
-		currPriceDisplay = currPrice[0] + '.' + currPrice[1][0] + currPrice[1][1]
-    
+
+		try:
+			currPriceDisplay = currPrice[0] + '.' + currPrice[1][
+			    0] + currPrice[1][1]
+
+		except:
+			try:
+				curryPriceDisplay = currPrice[0] + '.' + currPrice[1][0] + "0"
+
+			except:
+				currPriceDisplay = currPrice[0] + '.' + "00"
+
 		print("Current price of", targetStock + ":", currPriceDisplay)
 		print("")
 		choice = input("Hit enter to continue or 'quit' to exit")
@@ -119,9 +165,10 @@ def buyShares():
 		except:
 			print("a Non Valid Ticker has been entered")
 		currPrice = str(currPrice).split('.')
-		currPriceDisplay = currPrice[0] + '.' + currPrice[1][0] + currPrice[1][1]
-		
-		print(targetStock, "$" + str(currPrice))
+		currPriceDisplay = currPrice[0] + '.' + currPrice[1][0] + currPrice[1][
+		    1]
+
+		print(targetStock, "$" + str(currPriceDisplay))
 		print()
 		print("1 - Buy", targetStock)
 		print("2 - Main Menu")
@@ -136,12 +183,13 @@ def buyShares():
 				order = input()
 
 				validInput = not order.isdigit()
+
 			with open('portfolio.json') as file:
 				portfolio = json.load(file)
 
 			portfolio['stockNames'].append(targetStock)
 
-			portfolio['stockPrices'].append(currPrice)
+			portfolio['stockPrices'].append(float(currPriceDisplay))
 
 			portfolio['shareQuantities'].append(order)
 
@@ -164,17 +212,20 @@ def buyShares():
 
 
 def main():
-	mainMenu()
-	menuOpt = input()
+	appLoop = True
 
-	if menuOpt == '1':
-		portfolioSummary()
-	if menuOpt == '2':
-		lookUpStockPrices()
-	if menuOpt == '3':
-		buyShares()
-	if menuOpt == '4':
-		print("4")
+	while (appLoop):
+		mainMenu()
+		menuOpt = input()
+
+		if menuOpt == '1':
+			portfolioSummary()
+		if menuOpt == '2':
+			lookUpStockPrices()
+		if menuOpt == '3':
+			buyShares()
+		if menuOpt == '4':
+			print("4")
 
 
 if __name__ == "__main__":

@@ -15,6 +15,7 @@ TODO:
 
 import json
 import yahoo_fin.stock_info as si
+import PythonTableModule
 
 
 def initalUserSetup():
@@ -41,11 +42,23 @@ def portfolioSummary():
 	print()
 	print("Portfolio Summary")
 	print()
-	print("Stock Name", '\t', '\t', "Bought At", '\t', '\t',
-	      "Number of Shares", '\t', '\t', "Value")
+	
+	headerList = ["Stock Name","Bought At","Number of Shares"]
+	valueList = []
+    
+	for index in range(len(portfolio['stockNames'])):
+		valueList.append(portfolio['stockNames'][index])
+		valueList.append(portfolio['stockPrices'][index])
+		valueList.append(portfolio['shareQuantities'][index])
+  
+	PythonTableModule.createAndPrintTable(headerList,valueList) 
+"""
+	print("Stock Name", '\t', '\t','\t', "Bought At", '\t', '\t','\t',
+	      "Number of Shares", '\t', '\t','\t', "Value")
 
 	totalValue = 0
 	largeNumTab = False
+	largeQuanTab = False
 
 	for index in range(
 	    len(portfolio['stockNames'])
@@ -83,16 +96,19 @@ def portfolioSummary():
 
 		if float(stockValueDisplay) > 999.99:
 			largeNumTab = True
+		
+		if int(portfolio['shareQuantities'][index]) > 9:
+		  pass
 
 		if (largeNumTab):
-			print(portfolio['stockNames'][index], '\t', '\t', '\t',
-			      stockPriceDisplay, '\t', '\t',
-			      portfolio['shareQuantities'][index], '\t', '\t', '\t', '\t',
-			      '\t', stockValueDisplay)
+			print(portfolio['stockNames'][index], '\t', '\t', '\t','\t',
+			      stockPriceDisplay, '\t', '\t','\t',
+			      portfolio['shareQuantities'][index], '\t', '\t', '\t', '\t','\t',
+			      '\t','\t' ,stockValueDisplay)
 		else:
-			print(portfolio['stockNames'][index], '\t', '\t', '\t',
-			      stockPriceDisplay, '\t', '\t',
-			      portfolio['shareQuantities'][index], '\t', '\t', '\t', '\t',
+			print(portfolio['stockNames'][index], '\t', '\t', '\t','\t',
+			      stockPriceDisplay, '\t', '\t','\t',
+			      portfolio['shareQuantities'][index], '\t', '\t', '\t', '\t','\t',
 			      '\t', '\t',stockValueDisplay)
 
 		largeNumTab = False
@@ -115,7 +131,7 @@ def portfolioSummary():
 
 	print()
 	print("Total Portfolio Value:", totalValueDisplay)
-
+"""
 
 def lookUpStockPrices():
 	flag = True
@@ -136,7 +152,7 @@ def lookUpStockPrices():
 		try:
 			currPriceDisplay = currPrice[0] + '.' + currPrice[1][
 			    0] + currPrice[1][1]
-
+      
 		except:
 			try:
 				curryPriceDisplay = currPrice[0] + '.' + currPrice[1][0] + "0"

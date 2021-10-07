@@ -43,13 +43,14 @@ def portfolioSummary():
 	print("Portfolio Summary")
 	print()
 	
-	headerList = ["Stock Name","Bought At","Number of Shares"]
+	headerList = ["Stock Name","Bought At","Number of Shares","Total Value"]
 	valueList = []
     
 	for index in range(len(portfolio['stockNames'])):
 		valueList.append(portfolio['stockNames'][index])
-		valueList.append(portfolio['stockPrices'][index])
+		valueList.append("$" + str(portfolio['stockPrices'][index]))
 		valueList.append(portfolio['shareQuantities'][index])
+		valueList.append("$" + str(float(portfolio['stockPrices'][index]) * float(portfolio['shareQuantities'][index])))
   
 	PythonTableModule.createAndPrintTable(headerList,valueList) 
 """

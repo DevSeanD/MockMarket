@@ -191,27 +191,42 @@ def buyShares():
 		print("2 - Main Menu")
 		choice = input()
 
-		if choice == '1' or choice == '2':
-			validInput = True
+		if choice == '1':
+			print("How may shares of", targetStock,"would you like to purchase")
+			order = input()
 
-			while (validInput):
-				print("How may shares of", targetStock,
-				      "would you like to purchase")
-				order = input()
+			validInput = order.isdigit()
+			while(validInput == False):
+			  print("How may shares of", targetStock,"would you like to purchase")
+			  order = input()
+			  validInput = order.isdigit()
 
-				validInput = not order.isdigit()
+			if(validInput):
+			  with open('portfolio.json') as file:
+  				portfolio = json.load(file)
 
-			with open('portfolio.json') as file:
-				portfolio = json.load(file)
+			  portfolio['stockNames'].append(targetStock)
 
-			portfolio['stockNames'].append(targetStock)
+			  portfolio['stockPrices'].append(float(currPriceDisplay))
 
-			portfolio['stockPrices'].append(float(currPriceDisplay))
+			  portfolio['shareQuantities'].append(order)
 
-			portfolio['shareQuantities'].append(order)
+			  with open('portfolio.json', 'w') as file:
+  				json.dump(portfolio, file, indent=4)
 
-			with open('portfolio.json', 'w') as file:
-				json.dump(portfolio, file, indent=4)
+			  invalidInput = True
+			  while(invalidInput):
+  				print()
+  				print("Would you like to buy another Stock?")
+  				print("1 - Yes")
+  				print("2 - No")
+  				choice = input()
+
+  				if choice == '1':
+  				  invalidInput = False
+  				  buyShares()
+  				if choice == '2':
+  				  invalidInput = False
 
 		if choice == '2':
 			main()

@@ -45,14 +45,22 @@ def portfolioSummary():
 	
 	headerList = ["Stock Name","Bought At","Number of Shares","Total Value"]
 	valueList = []
+	valueCount = 0
     
 	for index in range(len(portfolio['stockNames'])):
+		valueCount += 1
 		valueList.append(portfolio['stockNames'][index])
 		valueList.append("$" + str(portfolio['stockPrices'][index]))
 		valueList.append(portfolio['shareQuantities'][index])
 		valueList.append("$" + str(float(portfolio['stockPrices'][index]) * float(portfolio['shareQuantities'][index])))
-  
-	PythonTableModule.createAndPrintTable(headerList,valueList) 
+	if valueCount > 0:
+		PythonTableModule.createAndPrintTable(headerList,valueList)
+		print(headerList)
+		print(valueList)
+	else:
+		print("There are no stocks in your portfolio")
+		print()
+    
 """
 	print("Stock Name", '\t', '\t','\t', "Bought At", '\t', '\t','\t',
 	      "Number of Shares", '\t', '\t','\t', "Value")

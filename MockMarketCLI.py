@@ -1,6 +1,5 @@
 """
-Author: Sean Dever
-Description: The purpose of this file is to serve as a starting point for the overall mock stock market project. It will ask the user for a stock and using the yahoo finance api it will rectrieve the current price.
+the current price.
 File Name: MockMarketCLI.py
 Dependencies:
   pip install yfinance
@@ -10,7 +9,8 @@ TODO:
   PortfolioSummary - Calculate new value instead of bought at value
   BuyShares function
   SellShares function
-  Round stock price values
+  Round sto
+Description: The purpose of this file is to serve as a starting point for the overall mock stock market project. It will ask the user for a stock and using the yahoo finance api it will rectrieve the current price.ck price values
 """
 
 import json
@@ -18,16 +18,29 @@ import yahoo_fin.stock_info as si
 import PythonTableModule
 
 
-def initalUserSetup():
+def initialUserSetup():
 	# The goal of this function is to prepare the .json file
 	# As well as allocate the user some funds to begin with
-	pass
+  print("Hello, and Welcome to MockMarket!")
+  print()
+  print("The goal of MockMarket is to allow you to gain real world stock experience and knowledge without the risk of capital")
+  print()
+  validInput = False
+  while(validInput == False):
+    userCapital = input("How much captial would you like to start with? : $ ",)
+    if userCapital.isdigit():
+      validInput = True
+      
+  return userCapital
 
 
-def mainMenu():
+def mainMenu(userCapitalVal):
+	userCaptial = userCapitalVal
 	print("=========")
 	print("Main Menu")
 	print("=========")
+	print()
+	print("Captial: $" + str(userCaptial))
 	print()
 	print("1 - Portfolio Summary")
 	print("2 - Look up Stock Prices")
@@ -39,8 +52,6 @@ def portfolioSummary():
 	with open('portfolio.json') as file:
 		portfolio = json.load(file)
 
-	print()
-	print("Portfolio Summary")
 	print()
 	
 	headerList = ["Stock Name","Bought At","Number of Shares","Total Value"]
@@ -55,8 +66,7 @@ def portfolioSummary():
 		valueList.append("$" + str(float(portfolio['stockPrices'][index]) * float(portfolio['shareQuantities'][index])))
 	if valueCount > 0:
 		PythonTableModule.createAndPrintTable(headerList,valueList)
-		print(headerList)
-		print(valueList)
+    
 	else:
 		print("There are no stocks in your portfolio")
 		print()
@@ -169,24 +179,40 @@ def buyShares():
 				if choice == '2':
 					main()
 
+def sellShares(userCaptialVal):
+  userCaptial = userCaptialVal
+  portfolioSummary()
+
+  tickerToBeSold = input("Enter the ticker of the stock you would like to sell")
+
+  with open('portfolio.json') as file:
+    portfolio = json.load(file)
+
+  for index in range(len(portfolio['stockNames'])):
+    if portfolio['stockNames'][index] == tickerToBeSold.upper():
+      print("You have {} shares of {}".format(portfolio['shareQuantities'][index],portfolio['stockNames'][index]))
+    
+  
+
 
 def main():
 	appLoop = True
 
+	userCaptial = initialUserSetup()
+
 	while (appLoop):
-		mainMenu()
+		mainMenu(userCaptial)
 		menuOpt = input()
 
 		if menuOpt == '1':
 			portfolioSummary()
+			print("Portfolio Summary")
 		if menuOpt == '2':
 			lookUpStockPrices()
 		if menuOpt == '3':
 			buyShares()
 		if menuOpt == '4':
-			print("4")
-
+			sellShares(userCaptial)
 
 if __name__ == "__main__":
 	main()
-	

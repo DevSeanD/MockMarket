@@ -183,15 +183,28 @@ def sellShares(userCaptialVal):
   userCaptial = userCaptialVal
   portfolioSummary()
 
-  tickerToBeSold = input("Enter the ticker of the stock you would like to sell")
+  tickerToBeSold = input("Enter the ticker of the stock you would like to sell: ")
 
   with open('portfolio.json') as file:
     portfolio = json.load(file)
 
+  shareTotal = 0
   for index in range(len(portfolio['stockNames'])):
     if portfolio['stockNames'][index] == tickerToBeSold.upper():
-      print("You have {} shares of {}".format(portfolio['shareQuantities'][index],portfolio['stockNames'][index]))
+      shareTotal += int(portfolio['shareQuantities'][index])
     
+  print("You have {} shares of {}".format(shareTotal,tickerToBeSold.upper()))
+
+  if(shareTotal != 0):
+    invalidInput = True
+    while(invalidInput):
+      print("Would you like to sell any?")
+      print("1 - Yes")
+      print("2 - No")
+      choice = input()
+
+      if choice == '1' or choice == '2':
+        invalidInput = False
   
 
 

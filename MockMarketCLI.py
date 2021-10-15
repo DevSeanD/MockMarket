@@ -1,5 +1,4 @@
 """
-the current price.
 File Name: MockMarketCLI.py
 Dependencies:
   pip install yfinance
@@ -10,7 +9,7 @@ TODO:
   BuyShares function
   SellShares function
   Round sto
-Description: The purpose of this file is to serve as a starting point for the overall mock stock market project. It will ask the user for a stock and using the yahoo finance api it will rectrieve the current price.ck price values
+Description: The purpose of this file is to serve as a starting point for the overall mock stock market project. It will ask the user for a stock and using the yahoo finance api it will rectrieve the current price values
 """
 
 import json
@@ -82,10 +81,16 @@ def lookUpStockPrices():
 		try:
 			currPrice = si.get_live_price(targetStock)
 		except:
-			print("a Non Valid Ticker has been entered")
-			mainMenu()
+			print("!A non valid ticker has been entered!")
+			print()
+			lookUpStockPrices()
 
-		currPrice = str(currPrice).split('.')
+		try:
+			currPrice = str(currPrice).split('.')
+		except:
+			print("!A non valid ticker has been entered!")
+			print()
+			lookUpStockPrices()
 
 		try:
 			currPriceDisplay = currPrice[0] + '.' + currPrice[1][
@@ -106,7 +111,10 @@ def lookUpStockPrices():
 			flag = False
 
 
-def buyShares():
+def buyShares(userCapitalVal):
+	userCapital = userCapitalVal
+	portfolioSummary()
+
 	flag = True
 
 	print("Buy Shares")
@@ -116,68 +124,68 @@ def buyShares():
 
 		try:
 			currPrice = si.get_live_price(targetStock)
-		except:
-			print("a Non Valid Ticker has been entered")
-		currPrice = str(currPrice).split('.')
-		currPriceDisplay = currPrice[0] + '.' + currPrice[1][0] + currPrice[1][
-		    1]
+			currPrice = str(currPrice).split('.')
+			currPriceDisplay = currPrice[0] + '.' + currPrice[1][0] + currPrice[1][1]
+    
+			print(targetStock, "$" + str(currPriceDisplay))
+			print()
+			print("1 - Buy", targetStock)
+			print("2 - Main Menu")
+			choice = input()
 
-		print(targetStock, "$" + str(currPriceDisplay))
-		print()
-		print("1 - Buy", targetStock)
-		print("2 - Main Menu")
-		choice = input()
-
-		if choice == '1':
-			print("How may shares of", targetStock,"would you like to purchase")
-			order = input()
-
-			validInput = order.isdigit()
-			while(validInput == False):
+			if choice == '1':
 			  print("How may shares of", targetStock,"would you like to purchase")
 			  order = input()
+
 			  validInput = order.isdigit()
+			  while(validInput == False):
+			    print("How may shares of", targetStock,"would you like to purchase")
+			    order = input()
+			    validInput = order.isdigit()
 
-			if(validInput):
-			  with open('portfolio.json') as file:
-  				portfolio = json.load(file)
+			  if(validInput):
+			    with open('portfolio.json') as file:
+			      portfolio = json.load(file)
 
-			  portfolio['stockNames'].append(targetStock)
+			    portfolio['stockNames'].append(targetStock)
 
-			  portfolio['stockPrices'].append(float(currPriceDisplay))
+			    portfolio['stockPrices'].append(float(currPriceDisplay))
 
-			  portfolio['shareQuantities'].append(order)
+			    portfolio['shareQuantities'].append(order)
 
-			  with open('portfolio.json', 'w') as file:
-  				json.dump(portfolio, file, indent=4)
+			    with open('portfolio.json', 'w') as file:
+			      json.dump(portfolio, file, indent=4)
 
-			  invalidInput = True
-			  while(invalidInput):
-  				print()
-  				print("Would you like to buy another Stock?")
-  				print("1 - Yes")
-  				print("2 - No")
-  				choice = input()
+			    invalidInput = True
+			    while(invalidInput):
+			      print()
+			      print("Would you like to buy another Stock?")
+			      print("1 - Yes")
+			      print("2 - No")
+			      choice = input()
 
-  				if choice == '1':
-  				  invalidInput = False
-  				  buyShares()
-  				if choice == '2':
-  				  invalidInput = False
+			      if choice == '1':
+			        invalidInput = False
+			        buyShares(userCaptial)
+			      if choice == '2':
+			        invalidInput = False
 
-		if choice == '2':
-			main()
+			if choice == '2':
+			  main(userCaptial)
 
-		else:
-			while choice != '1' and choice != '2':
-				print("1 - Buy", targetStock)
-				print("2 - Main Menu")
-				choice = input()
+			else:
+			  while choice != '1' and choice != '2':
+			    print("1 - Buy", targetStock)
+			    print("2 - Main Menu")
+			    choice = input()
 
-				if choice == '1':
-					buyShares()
-				if choice == '2':
-					main()
+			    if choice == '1':
+			      buyShares(userCaptial)
+			    if choice == '2':
+			      main(False,userCaptial)
+		except:
+				main(False,userCapital)
+		
 
 def sellShares(userCaptialVal):
   userCaptial = userCaptialVal
@@ -208,12 +216,15 @@ def sellShares(userCaptialVal):
   
 
 
-def main():
+def main(initSetUpVal,userCaptial):
+	initSetUp = initSetUpVal
 	appLoop = True
 
-	userCaptial = initialUserSetup()
+	if(initSetUpVal):
+		userCaptial = initialUserSetup()
+		initSetUp = False
 
-	while (appLoop):
+	while(appLoop):
 		mainMenu(userCaptial)
 		menuOpt = input()
 
@@ -223,9 +234,10 @@ def main():
 		if menuOpt == '2':
 			lookUpStockPrices()
 		if menuOpt == '3':
-			buyShares()
+			buyShares(userCaptial)
 		if menuOpt == '4':
 			sellShares(userCaptial)
 
 if __name__ == "__main__":
-	main()
+	initSetUp = True
+	main(initSetUp,0)

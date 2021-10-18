@@ -213,8 +213,15 @@ def sellShares(userCaptialVal):
 
       if choice == '1' or choice == '2':
         invalidInput = False
-  
 
+  quantityToBeSold = 0
+  invalidInput = True
+
+  while(invalidInput):
+    quantityToBeSold = input("How many of your {} shares of {} would you like to sell? : ".format(shareTotal,tickerToBeSold.upper()))
+    if quantityToBeSold.isdigit():
+      invalidInput = False
+  print(quantityToBeSold)
 
 def main(initSetUpVal,userCaptial):
 	initSetUp = initSetUpVal

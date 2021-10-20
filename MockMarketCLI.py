@@ -196,11 +196,25 @@ def sellShares(userCaptialVal):
   with open('portfolio.json') as file:
     portfolio = json.load(file)
 
+  found = False
   shareTotal = 0
   for index in range(len(portfolio['stockNames'])):
     if portfolio['stockNames'][index] == tickerToBeSold.upper():
       shareTotal += int(portfolio['shareQuantities'][index])
+      found = True
     
+  while(not found):
+    tickerToBeSold = input("Enter the ticker of the stock you would like to sell: ")
+
+    with open('portfolio.json') as file:
+      portfolio = json.load(file)
+
+    shareTotal = 0
+    for index in range(len(portfolio['stockNames'])):
+      if portfolio['stockNames'][index] == tickerToBeSold.upper():
+        shareTotal += int(portfolio['shareQuantities'][index])
+        found = True
+
   print("You have {} shares of {}".format(shareTotal,tickerToBeSold.upper()))
 
   if(shareTotal != 0):
@@ -214,14 +228,19 @@ def sellShares(userCaptialVal):
       if choice == '1' or choice == '2':
         invalidInput = False
 
-  quantityToBeSold = 0
-  invalidInput = True
+  if choice == '1':
+    quantityToBeSold = 0
+    invalidInput = True
 
-  while(invalidInput):
-    quantityToBeSold = input("How many of your {} shares of {} would you like to sell? : ".format(shareTotal,tickerToBeSold.upper()))
-    if quantityToBeSold.isdigit():
-      invalidInput = False
-  print(quantityToBeSold)
+    while(invalidInput):
+      quantityToBeSold = input("How many of your {} shares of {} would you like to sell? : ".format(shareTotal,tickerToBeSold.upper()))
+      if quantityToBeSold.isdigit():
+        invalidInput = False
+        print(quantityToBeSold)
+
+  if choice == '2':
+    print()
+    mainMenu(userCaptial)
 
 def main(initSetUpVal,userCaptial):
 	initSetUp = initSetUpVal

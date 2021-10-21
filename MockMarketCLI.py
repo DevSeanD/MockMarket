@@ -188,7 +188,7 @@ def buyShares(userCapitalVal):
 		
 
 def sellShares(userCaptialVal):
-  userCaptial = userCaptialVal
+  userCaptial = float(userCaptialVal)
   portfolioSummary()
 
   tickerToBeSold = input("Enter the ticker of the stock you would like to sell: ")
@@ -234,13 +234,17 @@ def sellShares(userCaptialVal):
 
     while(invalidInput):
       quantityToBeSold = input("How many of your {} shares of {} would you like to sell? : ".format(shareTotal,tickerToBeSold.upper()))
+
       if quantityToBeSold.isdigit():
         invalidInput = False
-        print(quantityToBeSold)
+        currPrice = si.get_live_price(tickerToBeSold)
+        userCaptial += float(currPrice) * int(quantityToBeSold)
 
   if choice == '2':
     print()
     mainMenu(userCaptial)
+
+  return userCaptial
 
 def main(initSetUpVal,userCaptial):
 	initSetUp = initSetUpVal
@@ -262,7 +266,7 @@ def main(initSetUpVal,userCaptial):
 		if menuOpt == '3':
 			buyShares(userCaptial)
 		if menuOpt == '4':
-			sellShares(userCaptial)
+			userCaptial = sellShares(userCaptial)
 
 if __name__ == "__main__":
 	initSetUp = True

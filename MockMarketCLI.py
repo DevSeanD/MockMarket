@@ -253,16 +253,19 @@ def sellShares(userCaptialVal):
 				currPrice = si.get_live_price(tickerToBeSold)
 				userCaptial += float(currPrice) * int(quantityToBeSold)
 
-				for index in range(len(portfolio)):
-					if int(
-					    portfolio["shareQuantities"][index]) > int(quantityToBeSold):
-						portfolio["shareQuantities"][index] = int(
-						    portfolio["shareQuantities"]
-						    [index]) - int(quantityToBeSold)
-						with open('portfolio.json', 'w') as file:
-						  json.dump(portfolio, file, indent=4)
-          
+				for index in range(len(portfolio["stockNames"])):
+          # The case where quantity of the stock entry is greater than the quantityToBeSold
 
+				  if portfolio["stockNames"][index] == tickerToBeSold.upper():
+					  if int(portfolio["shareQuantities"][index]) > int(quantityToBeSold):
+						  portfolio["shareQuantities"][index] = int(portfolio["shareQuantities"][index]) - int(quantityToBeSold)
+
+					  if int(portfolio["shareQuantities"][index]) < int(quantityToBeSold) and index + 1 == len(portfolio):
+					    print("You do not have {} shares of {} to sell".format(quantityToBeSold,tickerToBeSold.upper()))
+
+				with open('portfolio.json', 'w') as file:
+					json.dump(portfolio, file, indent=4)
+          
 	if choice == '2':
 		print()
 		mainMenu(userCaptial)

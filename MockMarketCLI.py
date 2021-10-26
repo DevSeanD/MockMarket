@@ -5,10 +5,8 @@ Dependencies:
   pip install yahoo_fin
 
 TODO:
-  PortfolioSummary - Calculate new value instead of bought at value
-  BuyShares function
-  SellShares function
-  Round sto
+  Fix issue where if a stock price is not 4 values an error is produced
+
 Description: The purpose of this file is to serve as a starting point for the overall mock stock market project. It will ask the user for a stock and using the yahoo finance api it will rectrieve the current price values
 """
 
@@ -118,7 +116,7 @@ def lookUpStockPrices():
 
 
 def buyShares(userCapitalVal):
-	userCapital = userCapitalVal
+	userCapital = float(userCapitalVal)
 	portfolioSummary()
 
 	flag = True
@@ -152,32 +150,36 @@ def buyShares(userCapitalVal):
 					order = input()
 					validInput = order.isdigit()
 
-				if (validInput):
-					with open('portfolio.json') as file:
-						portfolio = json.load(file)
+				if userCapital > int(order) * float(currPriceDisplay) and validInput:
+				  with open('portfolio.json') as file:
+				    portfolio = json.load(file)
 
-					portfolio['stockNames'].append(targetStock)
+				    portfolio['stockNames'].append(targetStock)
 
-					portfolio['stockPrices'].append(float(currPriceDisplay))
+				    portfolio['stockPrices'].append(float(currPriceDisplay))
 
-					portfolio['shareQuantities'].append(order)
+				    portfolio['shareQuantities'].append(order)
 
-					with open('portfolio.json', 'w') as file:
-						json.dump(portfolio, file, indent=4)
+				  with open('portfolio.json', 'w') as file:
+				    json.dump(portfolio, file, indent=4)
 
-					invalidInput = True
-					while (invalidInput):
-						print()
-						print("Would you like to buy another Stock?")
-						print("1 - Yes")
-						print("2 - No")
-						choice = input()
+				  invalidInput = True
+				  while (invalidInput):
+				    print()
+				    print("Would you like to buy another Stock?")
+				    print("1 - Yes")
+				    print("2 - No")
+				    choice = input()
 
-						if choice == '1':
-							invalidInput = False
-							buyShares(userCaptial)
-						if choice == '2':
-							invalidInput = False
+				    if choice == '1':
+					    invalidInput = False
+					    buyShares(userCaptial)
+				    if choice == '2':
+					    invalidInput = False
+
+				if userCapital < int(order) * float(currPriceDisplay) and validInput:
+				  print("You do not have enough capital to purchase this amount of stock")
+				  break
 
 			if choice == '2':
 				main(userCaptial)
@@ -192,12 +194,13 @@ def buyShares(userCapitalVal):
 						buyShares(userCaptial)
 					if choice == '2':
 						main(False, userCaptial)
+    
 		except:
 			main(False, userCapital)
 
 
-def sellShares(userCaptialVal):
-	userCaptial = float(userCaptialVal)
+def sellShares(userCapitalVal):
+	userCapital = float(userCapitalVal)
 	portfolioSummary()
 
 	tickerToBeSold = input(
@@ -251,7 +254,7 @@ def sellShares(userCaptialVal):
 			if quantityToBeSold.isdigit():
 				invalidInput = False
 				currPrice = si.get_live_price(tickerToBeSold)
-				userCaptial += float(currPrice) * int(quantityToBeSold)
+				userCapital += float(currPrice) * int(quantityToBeSold)
 
 				for index in range(len(portfolio["stockNames"])):
           # The case where quantity of the stock entry is greater than the quantityToBeSold
@@ -268,9 +271,9 @@ def sellShares(userCaptialVal):
           
 	if choice == '2':
 		print()
-		mainMenu(userCaptial)
+		mainMenu(userCapital)
 
-	return userCaptial
+	return userCapital
 
 
 def main(initSetUpVal, userCaptial):

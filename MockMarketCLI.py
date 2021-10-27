@@ -5,7 +5,6 @@ Dependencies:
   pip install yahoo_fin
 
 TODO:
-  Fix issue where if a stock price is not 4 values an error is produced
 
 Description: The purpose of this file is to serve as a starting point for the overall mock stock market project. It will ask the user for a stock and using the yahoo finance api it will rectrieve the current price values
 """
@@ -129,8 +128,17 @@ def buyShares(userCapitalVal):
 		try:
 			currPrice = si.get_live_price(targetStock)
 			currPrice = str(currPrice).split('.')
-			currPriceDisplay = currPrice[0] + '.' + currPrice[1][
+
+			try:
+			  currPriceDisplay = currPrice[0] + '.' + currPrice[1][
 			    0] + currPrice[1][1]
+
+			except:
+			  try:
+				  curryPriceDisplay = currPrice[0] + '.' + currPrice[1][0] + "0"
+
+			  except:
+				  currPriceDisplay = currPrice[0] + '.' + "00"
 
 			print(targetStock, "$" + str(currPriceDisplay))
 			print()

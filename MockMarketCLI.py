@@ -5,7 +5,7 @@ Dependencies:
   pip install yahoo_fin
 
 TODO:
-  Fix issue where if a stock price is not 4 values an error is produced
+  Apply if else to the sellShare function
 
 Description: The purpose of this file is to serve as a starting point for the overall mock stock market project. It will ask the user for a stock and using the yahoo finance api it will rectrieve the current price values
 """
@@ -265,21 +265,24 @@ def sellShares(userCapitalVal):
 				currPrice = si.get_live_price(tickerToBeSold)
 				userCapital += float(currPrice) * int(quantityToBeSold)
 
-				for index in range(len(portfolio["stockNames"])):
+				for index in range(len(portfolio["stockNames"])-1):
 				  if portfolio["stockNames"][index] == tickerToBeSold.upper():
             # The case where quantity of the stock entry is greater than the quantityToBeSold
 					  if int(portfolio["shareQuantities"][index]) > int(quantityToBeSold):
 						  portfolio["shareQuantities"][index] = int(portfolio["shareQuantities"][index]) - int(quantityToBeSold)
-            #The case where quantity of the stock entry is greater than the quantityToBeSold
-					  if int(portfolio["shareQuantities"][index]) < int(quantityToBeSold):
+            #The case where quantity of the stock entry is less than the quantityToBeSold
+					  elif int(portfolio["shareQuantities"][index]) < int(quantityToBeSold):
 					    print("You do not have {} shares of {} to sell".format(quantityToBeSold,tickerToBeSold.upper()))
             #The case where quantity of the stock entry is equal to the quantityToBeSold
-					  if int(portfolio["shareQuantities"][index]) == int(quantityToBeSold):
+					  elif int(portfolio["shareQuantities"][index]) == int(quantityToBeSold):
 					    print("here")
 					    del portfolio["shareQuantities"][index]
 					    del portfolio["stockNames"][index]
 					    del portfolio["stockPrices"][index]
 					    print("Here")
+					  #The case where quantity of 				stock entry is less than the quantityToBeSold
+					  elif int(portfolio["shareQuantities"][index]) < int(quantityToBeSold) and shareTotal >= int(quantityToBeSold):
+					    print("You have enough but not in one entry")
 
 				with open('portfolio.json', 'w') as file:
 					json.dump(portfolio, file, indent=4)

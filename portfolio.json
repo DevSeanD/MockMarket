@@ -1,0 +1,20 @@
+{
+    "stockNames": [
+        "F",
+        "TSM",
+        "F",
+        "GOOG"
+    ],
+    "stockPrices": [
+        15.11,
+        110.04,
+        15.09,
+        2776.94
+    ],
+    "shareQuantities": [
+        4,
+        1,
+        "1",
+        "16"
+    ]
+}

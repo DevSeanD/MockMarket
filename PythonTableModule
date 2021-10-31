@@ -3,7 +3,7 @@ FileName = PythonTableModule.py
 
 TODO:
   *Center the values in the fields
-  *Change variable names to production names
+  *Fix issue output when there are 2 or 3 rows of data
 """
 
 def createAndPrintTable(headerValueList,fieldValueList):

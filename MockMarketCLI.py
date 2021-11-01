@@ -12,8 +12,8 @@ Description: The purpose of this file is to serve as a starting point for the ov
 
 import json
 import yahoo_fin.stock_info as si
+import sys
 import PythonTableModule
-
 
 def initialUserSetup():
 	# The goal of this function is to prepare the .json file
@@ -159,7 +159,10 @@ def buyShares(userCapitalVal):
 					order = input()
 					validInput = order.isdigit()
 
-				if userCapital > int(order) * float(currPriceDisplay) and validInput:
+				if userCapital >= int(order) * float(currPriceDisplay) and validInput:
+				  userCapital = userCapital - int(order) * float(currPriceDisplay)
+				  print(userCapital)
+
 				  with open('portfolio.json') as file:
 				    portfolio = json.load(file)
 
@@ -168,9 +171,9 @@ def buyShares(userCapitalVal):
 				    portfolio['stockPrices'].append(float(currPriceDisplay))
 
 				    portfolio['shareQuantities'].append(order)
-
+                                 
 				  with open('portfolio.json', 'w') as file:
-				    json.dump(portfolio, file, indent=4)
+				    json.dump(portfolio, file, indent=4) 
 
 				  invalidInput = True
 				  while (invalidInput):
@@ -182,16 +185,16 @@ def buyShares(userCapitalVal):
 
 				    if choice == '1':
 					    invalidInput = False
-					    buyShares(userCaptial)
+					    buyShares(str(userCaptial))
 				    if choice == '2':
 					    invalidInput = False
 
-				if userCapital < int(order) * float(currPriceDisplay) and validInput:
+				elif userCapital < int(order) * float(currPriceDisplay) and validInput:
 				  print("You do not have enough capital to purchase this amount of stock")
 				  break
 
 			if choice == '2':
-				main(userCaptial)
+				main(False,(str(userCapital)))
 
 			else:
 				while choice != '1' and choice != '2':
@@ -200,12 +203,12 @@ def buyShares(userCapitalVal):
 					choice = input()
 
 					if choice == '1':
-						buyShares(userCaptial)
+						buyShares(str(userCapital))
 					if choice == '2':
-						main(False, userCaptial)
+						main(False,str(userCapital))
     
 		except:
-			main(False, userCapital)
+			main(False,str(userCapital))
 
 
 def sellShares(userCapitalVal):
@@ -294,18 +297,19 @@ def sellShares(userCapitalVal):
 	return userCapital
 
 
-def main(initSetUpVal, userCaptial):
+def main(initSetUpVal, userCapitalVal):
 	initSetUp = initSetUpVal
 	appLoop = True
+	userCapital = userCapitalVal
 
 	if(initSetUpVal):
-		userCaptial = initialUserSetup()
+		userCapital = initialUserSetup()
 		initSetUp = False
 
   #The main loop of the application
 	while(appLoop):
     #Call the user menu function
-		mainMenu(userCaptial)
+		mainMenu(userCapital)
     #Take in the user's selection
 		menuOpt = input()
 
@@ -316,9 +320,10 @@ def main(initSetUpVal, userCaptial):
 		if menuOpt == '2':
 			lookUpStockPrices()
 		if menuOpt == '3':
-			buyShares(userCaptial)
+			userCapital = buyShares(userCapital)
+			print(userCapital)
 		if menuOpt == '4':
-			userCaptial = sellShares(userCaptial)
+			userCapital = sellShares(userCapital)
 
 
 if __name__ == "__main__":

@@ -264,38 +264,41 @@ def sellShares(userCapitalVal):
 			    format(shareTotal, tickerToBeSold.upper()))
 
 			if quantityToBeSold.isdigit():
-				invalidInput = False
-				currPrice = si.get_live_price(tickerToBeSold)
-				userCapital += float(currPrice) * int(quantityToBeSold)
+			  invalidInput = False
+			  currPrice = si.get_live_price(tickerToBeSold)
+			  userCapital += float(currPrice) * int(quantityToBeSold)
 
-				for index in range(len(portfolio["stockNames"])-1):
-				  if portfolio["stockNames"][index] == tickerToBeSold.upper():
-            # The case where quantity of the stock entry is greater than the quantityToBeSold
-					  if int(portfolio["shareQuantities"][index]) > int(quantityToBeSold):
-						  portfolio["shareQuantities"][index] = int(portfolio["shareQuantities"][index]) - int(quantityToBeSold)
-            #The case where quantity of the stock entry is less than the quantityToBeSold
-					  elif int(portfolio["shareQuantities"][index]) < int(quantityToBeSold):
-					    print("You do not have {} shares of {} to sell".format(quantityToBeSold,tickerToBeSold.upper()))
-            #The case where quantity of the stock entry is equal to the quantityToBeSold
-					  elif int(portfolio["shareQuantities"][index]) == int(quantityToBeSold):
-					    print("here")
-					    del portfolio["shareQuantities"][index]
-					    del portfolio["stockNames"][index]
-					    del portfolio["stockPrices"][index]
-					    print("Here")
-					  #The case where quantity of 				stock entry is less than the quantityToBeSold
-					  elif int(portfolio["shareQuantities"][index]) < int(quantityToBeSold) and shareTotal >= int(quantityToBeSold):
-					    print("You have enough but not in one entry")
+		foundEntryListIndex = []  
+		for index in range(len(portfolio["stockNames"])-1):
+			  if portfolio["stockNames"][index] == tickerToBeSold.upper():
+			    foundEntryListIndex.append(index)
 
-				with open('portfolio.json', 'w') as file:
-					json.dump(portfolio, file, indent=4)
+		for entry in foundEntryListIndex:
+			print(entry)
+    #The case where quantity of the stock entry is greater than the quantityToBeSold
+		if int(portfolio["shareQuantities"][foundEntryListIndex[0]]) > int(quantityToBeSold):
+			portfolio["shareQuantities"][foundEntryListIndex[0]] = int(portfolio["shareQuantities"][foundEntryListIndex[0]]) - int(quantityToBeSold)
+    #The case where quantity of the stock entry is less than the quantityToBeSold
+		elif shareTotal < int(quantityToBeSold):
+			print("You do not have {} shares of {} to sell".format(quantityToBeSold,tickerToBeSold.upper()))
+    #The case where quantity of the stock entry is equal to the quantityToBeSold
+		elif int(portfolio["shareQuantities"][foundEntryListIndex[0]]) == int(quantityToBeSold):
+			del portfolio["shareQuantities"][index]
+			del portfolio["stockNames"][index]
+			del portfolio["stockPrices"][index]
+		#The case where quantity of all stock entries combined is greater than the quantityToBeSold
+		elif shareTotal >= int(quantityToBeSold):
+			print("You have enough but not in one entry")
+      
+    #Write changes to the json file        
+		with open('portfolio.json', 'w') as file:
+			json.dump(portfolio, file, indent=4)
           
 	if choice == '2':
 		print()
 		mainMenu(userCapital)
 
 	return userCapital
-
 
 def main(initSetUpVal, userCapitalVal):
 	initSetUp = initSetUpVal

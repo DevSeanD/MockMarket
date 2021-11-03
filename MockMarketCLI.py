@@ -191,7 +191,6 @@ def buyShares(userCapitalVal):
 
 				elif userCapital < int(order) * float(currPriceDisplay) and validInput:
 				  print("You do not have enough capital to purchase this amount of stock")
-				  break
 
 			if choice == '2':
 				main(False,(str(userCapital)))
@@ -273,27 +272,31 @@ def sellShares(userCapitalVal):
 			  if portfolio["stockNames"][index] == tickerToBeSold.upper():
 			    foundEntryListIndex.append(index)
 
+		print("here")
 		for entry in foundEntryListIndex:
 			print(entry)
-    #The case where quantity of the stock entry is greater than the quantityToBeSold
-		if int(portfolio["shareQuantities"][foundEntryListIndex[0]]) > int(quantityToBeSold):
-			portfolio["shareQuantities"][foundEntryListIndex[0]] = int(portfolio["shareQuantities"][foundEntryListIndex[0]]) - int(quantityToBeSold)
+
+      #The case where quantity of the stock entry is greater than the quantityToBeSold
+			if int(portfolio["shareQuantities"][int(entry)]) > int(quantityToBeSold):
+			  portfolio["shareQuantities"][int(entry)] = int(portfolio["shareQuantities"][int(entry)]) - int(quantityToBeSold)
+
+		#Write changes to the json file
+		with open('portfolio.json', 'w') as file:
+			json.dump(portfolio, file, indent=4)
+
     #The case where quantity of the stock entry is less than the quantityToBeSold
-		elif shareTotal < int(quantityToBeSold):
+		if shareTotal < int(quantityToBeSold):
 			print("You do not have {} shares of {} to sell".format(quantityToBeSold,tickerToBeSold.upper()))
+
     #The case where quantity of the stock entry is equal to the quantityToBeSold
 		elif int(portfolio["shareQuantities"][foundEntryListIndex[0]]) == int(quantityToBeSold):
 			del portfolio["shareQuantities"][index]
 			del portfolio["stockNames"][index]
 			del portfolio["stockPrices"][index]
+
 		#The case where quantity of all stock entries combined is greater than the quantityToBeSold
-		elif shareTotal >= int(quantityToBeSold):
-			print("You have enough but not in one entry")
-      
-    #Write changes to the json file        
-		with open('portfolio.json', 'w') as file:
-			json.dump(portfolio, file, indent=4)
-          
+		elif shareTotal > int(quantityToBeSold):
+			print("You have enough but not in one entry")        
 	if choice == '2':
 		print()
 		mainMenu(userCapital)

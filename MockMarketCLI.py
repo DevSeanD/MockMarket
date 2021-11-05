@@ -221,7 +221,7 @@ def sellShares(userCapitalVal):
   
 	if shareCount == 0:
 	  print("You do not have any shares to sell")
-	  mainMenu(userCapitalVal)
+	  return userCapitalVal
 
 	userCapital = float(userCapitalVal)
 	portfolioSummary()
@@ -296,13 +296,13 @@ def sellShares(userCapitalVal):
 			    del portfolio["stockNames"][int(entry)]
 			    del portfolio["stockPrices"][int(entry)]
 
-        #The case where quantity of the stock entry is equal to the quantityToBeSold
+      #The case where quantity of the stock entry is equal to the quantityToBeSold
 
-			  elif shareTotal == int(quantityToBeSold):
-			    print("Here")
-			    del portfolio["shareQuantities"][index]
-			    del portfolio["stockNames"][index]
-			    del portfolio["stockPrices"][index]
+			elif shareTotal == int(quantityToBeSold):
+			  print("Here")
+			  del portfolio["shareQuantities"][index]
+			  del portfolio["stockNames"][index]
+			  del portfolio["stockPrices"][index]
 
 
 		#Write changes to the json file

@@ -351,3 +351,4 @@ def main(initSetUpVal, userCapitalVal):
 if __name__ == "__main__":
 	initSetUp = True
 	main(initSetUp, 0)
+	

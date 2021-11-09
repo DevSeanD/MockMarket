@@ -1,13 +1,9 @@
 """
 File Name: MockMarketCLI.py
-Dependencies:
-  pip install yfinance
-  pip install yahoo_fin
+all yahoo_fin
 
 TODO:
-  Apply if else to the sellShare function
 
-Description: The purpose of this file is to serve as a starting point for the overall mock stock market project. It will ask the user for a stock and using the yahoo finance api it will rectrieve the current price values
 """
 
 import json
@@ -147,6 +143,8 @@ def buyShares(userCapitalVal):
 			print("2 - Main Menu")
 			choice = input()
 
+			flag = False
+
 			if choice == '1':
 				print("How may shares of", targetStock,
 				      "would you like to purchase")
@@ -175,37 +173,11 @@ def buyShares(userCapitalVal):
 				  with open('portfolio.json', 'w') as file:
 				    json.dump(portfolio, file, indent=4) 
 
-				  invalidInput = True
-				  while (invalidInput):
-				    print()
-				    print("Would you like to buy another Stock?")
-				    print("1 - Yes")
-				    print("2 - No")
-				    choice = input()
-
-				    if choice == '1':
-					    invalidInput = False
-					    buyShares(str(userCaptial))
-				    if choice == '2':
-					    invalidInput = False
-
 				elif userCapital < int(order) * float(currPriceDisplay) and validInput:
 				  print("You do not have enough capital to purchase this amount of stock")
 
-			if choice == '2':
-				main(False,(str(userCapital)))
+				return userCapital
 
-			else:
-				while choice != '1' and choice != '2':
-					print("1 - Buy", targetStock)
-					print("2 - Main Menu")
-					choice = input()
-
-					if choice == '1':
-						buyShares(str(userCapital))
-					if choice == '2':
-						main(False,str(userCapital))
-    
 		except:
 			main(False,str(userCapital))
 
@@ -275,8 +247,8 @@ def sellShares(userCapitalVal):
 			  currPrice = si.get_live_price(tickerToBeSold)
 			  userCapital += float(currPrice) * int(quantityToBeSold)
 
-		foundEntryListIndex = []  
-		for index in range(len(portfolio["stockNames"])-1):
+		foundEntryListIndex = []
+		for index in range(len(portfolio["stockNames"])):
 			  if portfolio["stockNames"][index] == tickerToBeSold.upper():
 			    foundEntryListIndex.append(index)
 
@@ -285,7 +257,10 @@ def sellShares(userCapitalVal):
 			print(quantityToBeSold)
       #The case where quantity of the stock entry is greater than the quantityToBeSold
 			if int(portfolio["shareQuantities"][int(entry)]) > int(quantityToBeSold):
+			  print("More shares in one entry")
 			  portfolio["shareQuantities"][int(entry)] = int(portfolio["shareQuantities"][int(entry)]) - int(quantityToBeSold)
+        # Finish the loop
+			  break
 
       #The case where quantity of all stock entries combined is greater than the quantityToBeSold
 			elif shareTotal >= int(quantityToBeSold):
@@ -297,9 +272,8 @@ def sellShares(userCapitalVal):
 			    del portfolio["stockPrices"][int(entry)]
 
       #The case where quantity of the stock entry is equal to the quantityToBeSold
-
 			elif shareTotal == int(quantityToBeSold):
-			  print("Here")
+			  print("Equal to the quantity sold")
 			  del portfolio["shareQuantities"][index]
 			  del portfolio["stockNames"][index]
 			  del portfolio["stockPrices"][index]
